@@ -31,7 +31,7 @@ impl NaiveBayesClassifier {
             self.increment_message_classifications_count(message);
             for token in tokenize(&message.text.to_lowercase()) {
                 self.tokens.insert(token.to_string());
-                self.increment_word_counts(token, message.is_spam)
+                self.increment_token_count(token, message.is_spam)
             }
         }
     }
@@ -44,7 +44,7 @@ impl NaiveBayesClassifier {
         }
     }
 
-    fn increment_word_counts(&mut self, token: &str, is_spam: bool) {
+    fn increment_token_count(&mut self, token: &str, is_spam: bool) {
         if !self.token_spam_counts.contains_key(token) {
             self.token_spam_counts.insert(token.to_string(), 0);
         }
@@ -126,7 +126,6 @@ mod tests {
 
     #[test]
     fn naive_bayes() {
-        //Maybe make overlap between spam messages
         let train_messages = [
             Message {
                 text: "Free Bitcoin viagra XXX christmas deals 😻😻😻",
