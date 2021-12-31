@@ -132,11 +132,11 @@ mod tests {
                 is_spam: true,
             },
             Message {
-                text: "Dear Granddaughter, please explain Bitcoin over Christmas dinner",
+                text: "My dear Granddaughter, please explain Bitcoin over Christmas dinner",
                 is_spam: false,
             },
             Message {
-                text: "Our dear alumni, please consider making a donation...",
+                text: "Here in my garage...",
                 is_spam: true,
             },
         ];
@@ -164,18 +164,16 @@ mod tests {
             1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "XXX"  (not present)
             (1. + alpha) / (num_spam_messages + 2. * alpha),      // "christmas"  (present)
             (1. + alpha) / (num_spam_messages + 2. * alpha),      // "deals"  (present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "dear"  (not present)
+            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "my"  (not present)
+            1. - (0. + alpha) / (num_spam_messages + 2. * alpha), // "dear"  (not present)
             1. - (0. + alpha) / (num_spam_messages + 2. * alpha), // "granddaughter"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "please"  (not present)
+            1. - (0. + alpha) / (num_spam_messages + 2. * alpha), // "please"  (not present)
             1. - (0. + alpha) / (num_spam_messages + 2. * alpha), // "explain"  (not present)
             1. - (0. + alpha) / (num_spam_messages + 2. * alpha), // "over"  (not present)
             1. - (0. + alpha) / (num_spam_messages + 2. * alpha), // "dinner"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "our"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "alumni"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "consider"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "making"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "a"  (not present)
-            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "donation"  (not present)
+            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "here"  (not present)
+            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "in"  (not present)
+            1. - (1. + alpha) / (num_spam_messages + 2. * alpha), // "garage"  (not present)
         ];
 
         let probs_if_ham = [
@@ -185,18 +183,16 @@ mod tests {
             1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "XXX"  (not present)
             (1. + alpha) / (num_ham_messages + 2. * alpha),      // "christmas"  (present)
             (0. + alpha) / (num_ham_messages + 2. * alpha),      // "deals"  (present)
+            1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "my"  (not present)
             1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "dear"  (not present)
             1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "granddaughter"  (not present)
             1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "please"  (not present)
             1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "explain"  (not present)
             1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "over"  (not present)
             1. - (1. + alpha) / (num_ham_messages + 2. * alpha), // "dinner"  (not present)
-            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "our"  (not present)
-            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "alumni"  (not present)
-            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "consider"  (not present)
-            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "making"  (not present)
-            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "a"  (not present)
-            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "donation"  (not present)
+            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "here"  (not present)
+            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "in"  (not present)
+            1. - (0. + alpha) / (num_ham_messages + 2. * alpha), // "garage"  (not present)
         ];
 
         let p_if_spam_log: f64 = probs_if_spam.iter().map(|p| p.ln()).sum();
@@ -205,7 +201,7 @@ mod tests {
         let p_if_ham_log: f64 = probs_if_ham.iter().map(|p| p.ln()).sum();
         let p_if_ham = p_if_ham_log.exp();
 
-        // P(message | spam) / (P(messge | spam) + P(message | ham)) rounds to 0.79
+        // P(message | spam) / (P(messge | spam) + P(message | ham)) rounds to 0.97
         assert!((model.predict(input_text) - p_if_spam / (p_if_spam + p_if_ham)).abs() < 0.000001);
     }
 }
